@@ -10,7 +10,6 @@ class Product(models.Model):
     color           = models.CharField(max_length=20,null=True)
     price           = models.IntegerField()
     category        = models.ForeignKey('Category',on_delete=models.CASCADE)
-   #review          = models.ForeignKey('reviews',on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'products'
@@ -26,18 +25,18 @@ class Category(models.Model):
     name            = models.CharField(max_length=10)
 
     class Meta:
-        db_table = 'category'
+        db_table = 'categories'
 
 class ApplyOn(models.Model):
     name            = models.CharField(max_length=10)
     product         = models.ManyToManyField('Product',through='ProductsApplyOn')
 
     class Meta:
-        db_table = 'apply_on'
+        db_table = 'apply_ons'
 
 class ProductsApplyOn(models.Model):
     product         = models.ForeignKey('Product',on_delete=models.CASCADE)
     apply_on        = models.ForeignKey('ApplyOn',on_delete=models.CASCADE)
 
     class Meta:
-        db_table = 'products_apply_on'
+        db_table = 'products_apply_ons'
