@@ -9,29 +9,35 @@ class Product(models.Model):
     contains        = models.TextField(max_length=1000)
     color           = models.CharField(max_length=20,null=True)
     price           = models.IntegerField()
-    category1       = models.ForeignKey(Category1,on_delete=models.CASCADE)
-   #review          = models.ForeignKey(reviews,on_delete=models.CASCADE)
+    category        = models.ForeignKey('Category',on_delete=models.CASCADE)
+   #review          = models.ForeignKey('reviews',on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'products'
 
 class ProductImage(models.Model):
     image_url       = models.URLField(max_length=1000)
-    product         = models.ForeignKey(Product,on_delete=models.CASCADE)
+    product         = models.ForeignKey('Product',on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'product_images'
 
-class Category1(models.Model):
+class Category(models.Model):
     name            = models.CharField(max_length=10)
 
     class Meta:
-        db_table = 'category1'
+        db_table = 'category'
 
-class Category2(models.Model):
+class ApplyOn(models.Model):
     name            = models.CharField(max_length=10)
-    product         = models.ManyTomanyField(Product)
+    product         = models.ManyToManyField('Product',through='ProductsApplyOn')
 
     class Meta:
-        db_table = 'category2'
+        db_table = 'apply_on'
 
+class ProductsApplyOn(models.Model):
+    product         = models.ForeignKey('Product',on_delete=models.CASCADE)
+    apply_on        = models.ForeignKey('ApplyOn',on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'products_apply_on'
