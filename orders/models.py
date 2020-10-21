@@ -1,6 +1,7 @@
 from django.db      import models
 
 class Order(models.Model):
+    user            = models.ForeignKey('users.User',on_delete=models.CASCADE)
     order_number    = models.CharField(max_length=20)
     order_date      = models.DateField(auto_now_add=True)
     order_status    = models.ForeignKey('OrderStatus',on_delete=models.CASCADE)
@@ -14,9 +15,3 @@ class OrderStatus(models.Model):
     class Meta:
         db_table = 'order_statuses'
 
-class OrderItem(models.Model):
-    order           = models.ForeignKey('Order',on_delete=models.CASCADE)
-    quantity        = models.IntegerField()
-
-    class Meta:
-        db_table = 'order_items'
