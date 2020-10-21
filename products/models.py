@@ -29,12 +29,12 @@ class Category(models.Model):
 
 class ApplyOn(models.Model):
     name            = models.CharField(max_length=10)
-    product         = models.ManyToManyField('Product',through='ProductsApplyOn')
+    product         = models.ManyToManyField('Product',through='ProductApplyOn')
 
     class Meta:
         db_table = 'apply_ons'
 
-class ProductsApplyOn(models.Model):
+class ProductApplyOn(models.Model):
     product         = models.ForeignKey('Product',on_delete=models.CASCADE)
     apply_on        = models.ForeignKey('ApplyOn',on_delete=models.CASCADE)
 
