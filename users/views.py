@@ -6,6 +6,7 @@ import bcrypt
 import jwt
 import django
 import re
+import my_settings
 class SignUpView(View):
     def post(self , request):
         try:
@@ -40,20 +41,28 @@ class SignUpView(View):
 
 class LoginView(View):
     def post(self,request):
+        data = json.loads(request.body)
         
-        # data = json.loads(request.body)
+        email      = data["email"]
+        password   = data["password"]
         
-        # email      = data["email"]
-        # password   = data["password"]
+        get_email= User.objects.filter(email=email)
         
-        # return JsonResponse({"Message":"SUCCESS"})
-        # get_pw_s=User.objects.get(email=email).password
-        # get_pw_b=get_pw_s.encode('utf-8')
-
-        # if bcrypt.checkpw(password.encode('utf-8'), get_pw_b) :
-        #     return({"Message":"SUCCESS"})
-
-
+        if len(get_email) != 0 :
+            get_pw_s=User.objects.get(email=email).password
+            get_pw_b=get_pw_s.encode('utf-8')
+            
+            if bcrypt.checkpw(password.encode('utf-8'), get_pw_b) :
+                access_token   = jwt.encode({'user_id' : get_email[0].id}, my_settings.SECRET['secret'], algorithm = 'HS256')
+                access_token_d = jwt.decode(access_token ,my_settings.SECRET['secret'], algorithm = 'HS256')
+                acress_token_id = access_token_d["user_id"]
+                token=access_token.decode('utf-8')
+                return JsonResponse ({"Message":"SUCCESS",'token':token , 'token_d':access_token_d})
+                
+            else :
+                return JsonResponse({"Message":"NOT VALIED EMAIL OR PW"})
+        else:
+            return JsonResponse({"Message":"NOT VALIED EMAIL OR PW"})
 
         
 
