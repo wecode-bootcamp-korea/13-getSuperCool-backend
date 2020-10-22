@@ -1,15 +1,16 @@
 from django.db      import models
 
 class Review(models.Model):
-    user         = models.ForeignKey('users.User',on_delete=models.CASCADE)
-    caption      = models.CharField(max_length=45)
-    user_name    = models.CharField(max_length=10)
-    review_date  = models.DateField(auto_now_add=True)
-    comment      = models.TextField(max_length=200)
-    score        = models.ForeignKey('Score',on_delete=models.CASCADE)
-    age_range    = models.ForeignKey('AgeRange',on_delete=models.CASCADE,null=True)
-    skin_shade   = models.ForeignKey('SkinShade',on_delete=models.CASCADE,null=True)
-    skin_type    = models.ForeignKey('SkinType',on_delete=models.CASCADE,null=True)
+    user       = models.ForeignKey('users.User',on_delete=models.CASCADE)
+    caption    = models.CharField(max_length=45)
+    user_name  = models.CharField(max_length=10)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+    comment    = models.CharField(max_length=1000)
+    score      = models.ForeignKey('Score',on_delete=models.CASCADE)
+    age_range  = models.ForeignKey('AgeRange',on_delete=models.CASCADE,null=True)
+    skin_shade = models.ForeignKey('SkinShade',on_delete=models.CASCADE,null=True)
+    skin_type  = models.ForeignKey('SkinType',on_delete=models.CASCADE,null=True)
 
     class Meta:
         db_table = 'reviews'
