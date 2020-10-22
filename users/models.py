@@ -27,7 +27,7 @@ class Subscription(models.Model):
 class Inquiry(models.Model):
     email       = models.EmailField(max_length=255)
     name        = models.CharField(max_length=45)
-    order_id    = models.ForeignKey('order.Order' , on_delete=models.CASCADE,null=True) 
+    order_id    = models.ForeignKey('orders.Order' , on_delete=models.CASCADE,null=True) 
     country     = models.CharField(max_length=45,null=True)
     subject_id  = models.OneToOneField('Subject', on_delete=models.CASCADE)
     message     = models.CharField(max_length=2000)
