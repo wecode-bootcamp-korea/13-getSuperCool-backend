@@ -11,6 +11,7 @@ class Review(models.Model):
     age_range  = models.ForeignKey('AgeRange',on_delete=models.CASCADE,null=True)
     skin_shade = models.ForeignKey('SkinShade',on_delete=models.CASCADE,null=True)
     skin_type  = models.ForeignKey('SkinType',on_delete=models.CASCADE,null=True)
+    product    = models.ForeignKey('products.Product',on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'reviews'
@@ -41,7 +42,7 @@ class SkinType(models.Model):
 
 class ReviewImage(models.Model):
     image_url = models.URLField(max_length=1000)
-    product   = models.ForeignKey('Review',on_delete=models.CASCADE)
+    review    = models.ForeignKey('Review',on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'review_images'
