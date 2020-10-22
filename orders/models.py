@@ -15,3 +15,10 @@ class OrderStatus(models.Model):
     class Meta:
         db_table = 'order_statuses'
 
+class OrderItem(models.Model):
+    order           = models.ForeignKey('Order',on_delete=models.CASCADE)
+    quantity        = models.IntegerField()
+    product         = models.ForeignKey('products.Product',on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'order_items'
