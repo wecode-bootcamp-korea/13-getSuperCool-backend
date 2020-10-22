@@ -6,7 +6,8 @@ class User(models.Model):
     birth_date  = models.DateField()
     email       = models.EmailField(max_length=255, unique=True)
     password    = models.CharField(max_length=1000)
-    like        =models.ManyToManyField('products.Product' , through='Like')
+    like        = models.ManyToManyField('products.Product' , through='Like')
+
     class Meta:
         db_table = 'users'  
 
@@ -24,12 +25,12 @@ class Subscription(models.Model):
         db_table='subscriptions'  
 
 class Inquiry(models.Model):
-    email            = models.EmailField(max_length=255)
-    name             = models.CharField(max_length=45)
-    order_number_id  = models.ForeignKey('products.Product' , on_delete=models.CASCADE,null=True) 
-    country          = models.CharField(max_length=45,null=True)
-    subject_id       = models.OneToOneField('Subject', on_delete=models.CASCADE)
-    message          = models.CharField(max_length=2000)
+    email       = models.EmailField(max_length=255)
+    name        = models.CharField(max_length=45)
+    order_id    = models.ForeignKey('order.Order' , on_delete=models.CASCADE,null=True) 
+    country     = models.CharField(max_length=45,null=True)
+    subject_id  = models.OneToOneField('Subject', on_delete=models.CASCADE)
+    message     = models.CharField(max_length=2000)
 
     class Meta:
         db_table='inquiries' 
