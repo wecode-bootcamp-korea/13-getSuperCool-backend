@@ -6,12 +6,12 @@ class User(models.Model):
     birth_date  = models.DateField()
     email       = models.EmailField(max_length=255, unique=True)
     password    = models.CharField(max_length=1000)
-    like        = models.ManyToManyField('products.Product' , through='Like')
+    like        = models.ManyToManyField('products.Product' , through='Users_products_likes')
 
     class Meta:
         db_table = 'users'  
 
-class Like(models.Model):
+class Users_products_likes(models.Model):
     user    = models.ForeignKey('User', on_delete=models.CASCADE) 
     product = models.ForeignKey('products.Product', on_delete=models.CASCADE)
 
