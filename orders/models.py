@@ -1,3 +1,17 @@
-from django.db import models
+from django.db      import models
 
-# Create your models here.
+class Order(models.Model):
+    user            = models.ForeignKey('users.User',on_delete=models.CASCADE)
+    order_number    = models.CharField(max_length=20)
+    order_date      = models.DateField(auto_now_add=True)
+    order_status    = models.ForeignKey('OrderStatus',on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'orders'
+
+class OrderStatus(models.Model):
+    status          = models.CharField(max_length=20)
+
+    class Meta:
+        db_table = 'order_statuses'
+
