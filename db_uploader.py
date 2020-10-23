@@ -26,8 +26,6 @@ with open(CSV_PATH_PRODUCTS) as in_file:
         size = row[3]
         good_to_know = row[4]
         contains = row[5]
-        price = row[6]
-        category_id = Category.objects.filter(name=row[7])
-        
-        print(product_name,super_tip,size,price,category_id)
-
+        price = row[7]
+        category_id = Category.objects.filter(name=row[8])
+        Product.objects.create(name=product_name, description=description, super_tip=super_tip, size=size, good_to_know=good_to_know, contains=contains, price=price, category_id=category_id)
