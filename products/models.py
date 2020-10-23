@@ -7,7 +7,6 @@ class Product(models.Model):
     size            = models.CharField(max_length=20)
     good_to_know    = models.TextField(max_length=200)
     contains        = models.TextField(max_length=1000)
-    color           = models.CharField(max_length=20,null=True)
     price           = models.IntegerField()
     category        = models.ForeignKey('Category',on_delete=models.CASCADE)
 
@@ -26,7 +25,7 @@ class Color(models.Model):
     name            = models.CharField(max_length=20)
 
     class Meta:
-        db_table = 'color'
+        db_table = 'colors'
 
 class Category(models.Model):
     name            = models.CharField(max_length=10)
