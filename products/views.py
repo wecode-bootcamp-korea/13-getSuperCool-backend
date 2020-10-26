@@ -19,16 +19,16 @@ class ProductDetailView(View):
                 images = ProductImage.objects.filter(product_id=product_id).values_list('image_url',flat=True)
                 color_options = []
 
-            product_info = list(Product.objects.filter(id=product_id).values())
+            product_info = Product.objects.filter(id=product_id).values()
             product_images = list(images)
             
-            product_detail = [{
-                "color options" : color_options,
-                "product images" : product_images,
-                "product info" : product_info,
-            }]
+            product_detail = {
+                "color_options" : color_options,
+                "product_images" : product_images,
+                "product_info" : product_info[0],
+            }
 
-            return JsonResponse({"product detail" : product_detail}, status=200)
+            return JsonResponse({"product_detail" : product_detail}, status=200)
 
         except Model.DoesNotExist:
             return JsonResponse({"message" : "Product does not exist"}, status=400)
