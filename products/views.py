@@ -19,13 +19,13 @@ class ProductDetailView(View):
                 images = ProductImage.objects.filter(product_id=product_id).values_list('image_url',flat=True)
                 color_options = []
 
-            product_info = Product.objects.filter(id=product_id).values()
+            product_info = Product.objects.get(id=product_id).__dict__
             product_images = list(images)
             
             product_detail = {
                 "color_options" : color_options,
                 "product_images" : product_images,
-                "product_info" : product_info[0],
+                "product_info" : product_info,
             }
 
             return JsonResponse({"product_detail" : product_detail}, status=200)
