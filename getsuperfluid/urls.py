@@ -18,5 +18,4 @@ from django.urls import path,include
 
 urlpatterns = [
      path('account', include('users.urls')),
-     path('subscript', include('users.urls'))
 ]
