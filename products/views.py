@@ -6,20 +6,17 @@ from django.http  import HttpResponse, JsonResponse
 from products.models import Product, Color, ProductImage
 
 class ProductDetailView(View):
-    def get(self, request):
+    def get(self, request, product_id):
         try:
-
-            product_id = request.GET['product_id']
             color_id = request.GET.get('color_id', None)
             
-            selected_product = Product.objects.get(id=product_id)
+            product = Product.objects.get(id=product_id)
 
-            color_filter = {'color_id' : color_id}
-            images = selected_product.productimage_set.filter(**color_filter)
+            images = product.productimage_set.filter(color_id=color_id)
             product_images = [image.image_url for image in images]
             
             if color_id:
-                color_ids = selected_product.productimage_set.values_list('color_id',flat=True).distinct()
+                color_ids = product.productimage_set.values_list('color_id',flat=True).distinct()
                 color_options = [{"id": id, "name": Color.objects.get(id=id).name} for id in color_ids]
             else:
                 color_options = []
