@@ -2,16 +2,15 @@ import json
 
 from django.views     import View
 from django.http      import HttpResponse, JsonResponse
-from django.db.models import Q
 
-from products.models import Product, Color, ProductImage, Category, ProductApplyOn, ApplyOn
+from products.models import Product, Color, ProductColor, Image, Category, ProductApplyOn, ApplyOn
 
 class ProductListView(View):
     def get(self, request):
 
         category_id = request.GET.get('category', '1,2').split(',')
         apply_on_id = request.GET.get('apply_on','1,2,3').split(',')
-        
+
         products_in_category = Product.objects.filter(category_id__in=category_id).values_list('id', flat=True)
         products_in_apply_on = ProductApplyOn.objects.filter(apply_on_id__in=apply_on_id).values_list('product_id', flat=True)
         products_in_both     = [id for id in products_in_category if id in products_in_apply_on]
