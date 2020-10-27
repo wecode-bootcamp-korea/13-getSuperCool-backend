@@ -8,9 +8,7 @@ import django
 from django.views import View
 from django.http  import JsonResponse
 
-from .models      import User,Like,Subscription,Inquiry
-from products.models import Product
-from  .parameter import authorize_decorator
+from .models      import User
 
 class SignUpView(View):
     def post(self , request):
@@ -35,10 +33,11 @@ class SignUpView(View):
             hash_password   = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt()).decode('utf-8')
            
             User.objects.create(
-                first_name=first_name,
-                last_name=last_name,
-                birth_date=birth_date,
-                email=email,password=hash_password
+                first_name  =first_name,
+                last_name   =last_name,
+                birth_date  =birth_date,
+                email       =email,
+                password    =hash_password
                 )
 
             return JsonResponse({"message":"SUCCESS"},status=200)
@@ -53,8 +52,8 @@ class LoginView(View):
     def post(self,request):
         data = json.loads(request.body)
         
-        email      = data["email"]
-        password   = data["password"]
+        email     = data["email"]
+        password  = data["password"]
         
         get_email = User.objects.filter(email=email)
 
