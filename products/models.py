@@ -13,13 +13,22 @@ class Product(models.Model):
     class Meta:
         db_table = 'products'
 
-class ProductImage(models.Model):
-    image_url       = models.URLField(max_length=1000)
+class ProductColor(models.Model):
     product         = models.ForeignKey('Product',on_delete=models.CASCADE)
-    color           = models.ForeignKey('Color',on_delete=models.CASCADE)
+    color           = models.ForeignKey('Color',on_delete=models.CASCADE,null=True)
 
     class Meta:
-        db_table = 'product_images'
+        db_table = 'products_colors'
+
+class Image(models.Model):
+    product_color  = models.ForeignKey('ProductColor', on_delete=models.CASCADE)
+    product_image  = models.URLField(max_length=1000)  
+    model_image    = models.URLField(max_length=1000)
+    detail1_image  = models.URLField(max_length=1000)
+    detail2_image  = models.URLField(max_length=1000)
+
+    class Meta:
+        db_table = 'images'
 
 class Color(models.Model):
     name            = models.CharField(max_length=20)
