@@ -22,11 +22,10 @@ class ProductColor(models.Model):
 
 class Image(models.Model):
     product_color  = models.ForeignKey('ProductColor', on_delete=models.CASCADE)
-    logo_image     = models.URLField(max_length=1000)
     product_image  = models.URLField(max_length=1000)  
     model_image    = models.URLField(max_length=1000)
     detail1_image  = models.URLField(max_length=1000)
-    detial2_image  = models.URLField(max_length=1000)
+    detail2_image  = models.URLField(max_length=1000)
 
     class Meta:
         db_table = 'images'
