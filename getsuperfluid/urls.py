@@ -17,4 +17,5 @@ from django.urls import path, include
 
 urlpatterns = [
         path('shop', include('products.urls'))
+     path('account', include('users.urls')),
 ]
