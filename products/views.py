@@ -7,7 +7,7 @@ from products.models import Product, Color, ProductColor, Image, Category, Produ
 
 class ProductListView(View):
     def get(self, request):
-        products = Product.objects.all().select_related('category').prefetch_related('productapplyon_set__apply_on','productcolor_set__color')
+        products = Product.objects.select_related('category').prefetch_related('productapplyon_set__apply_on','productcolor_set__color')
 
         product_list = [{
             'name'          : product.name,
@@ -43,7 +43,7 @@ class ProductDetailView(View):
             
             color_list = [{
                 'color_id'      : product.color_id,
-                'color_name'    : product.color.name,
+                'color_name'    : product.color.name if product.color_id else "",
                 'product_image' : product.image_set.get().product_image,
                 'model_image'   : product.image_set.get().model_image,
                 'detail1_image' : product.image_set.get().detail1_image,
