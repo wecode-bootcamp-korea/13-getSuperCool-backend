@@ -2,8 +2,8 @@ from django.db      import models
 
 class Order(models.Model):
     user         = models.ForeignKey('users.User',on_delete=models.CASCADE)
-    order_number = models.CharField(max_length=20)
-    order_date   = models.DateField(auto_now_add=True)
+    order_number = models.CharField(max_length=20,null=True)
+    order_date   = models.DateField(auto_now_add=True,null=True)
     order_status = models.ForeignKey('OrderStatus',on_delete=models.CASCADE)
 
     class Meta:
@@ -17,7 +17,7 @@ class OrderStatus(models.Model):
 
 class OrderItem(models.Model):
     order        = models.ForeignKey('Order',on_delete=models.CASCADE)
-    quantity     = models.IntegerField()
+    quantity     = models.IntegerField(null=True)
     productcolor = models.ForeignKey('products.ProductColor',on_delete=models.CASCADE,null=True)
 
     class Meta:

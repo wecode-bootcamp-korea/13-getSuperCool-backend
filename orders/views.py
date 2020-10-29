@@ -3,27 +3,35 @@ import json
 from django.views import View
 from django.http  import HttpResponse, JsonResponse
 
-from products.models import Product
+from products.models import ProductColor, Product, Color, Image
 from orders.models   import Order, OrderItem, OrderStatus
 
 class CartView(View):
     def post(self, request):
         data = json.loads(request.body)
         
-        for item in data:
-            product_id
-            color_id
-            quantity
-            price
-            모델 바꾸고(color id 추가)
+        user_id    = data['user_id']
+        product_id = data['product_id'] 
+        color_id   = data['color_id'] if data['color_id'] != '' else None 
+        quantity   = data['quantity']
+        
+        order = Order.objects.get_or_create(user_id=user_id, order_status_id=1)[0]
+        
+        product_color =  ProductColor.objects.get(product_id=product_id, color_id=color_id)
+        
+        order_item = OrderItem.objects.get_or_create(order_id=order.id, productcolor_id=product_color.id)[0]
+        order_item.quantity = quantity
+        order_item.save()
+        
+        items_in_cart = OrderItem.objects.filter(order_id=order.id).select_related('productcolor__product','productcolor__color')
 
-        order create 
-        user_id
-        order_number
-        order_status_id = 1
-            
+        item_list = [{
+            'product_name': item.productcolor.product.name,
+            'color_name': item.productcolor.color.name if item.productcolor.color_id else '',
+            'quantity': item.quantity 
+            } for item in items_in_cart]     
 
-        return JsonResponse({"message" : "UPDATED SHOPPING CART"}, status =201)
+        return JsonResponse({"items_in_shopping_cart" : item_list}, status =201)
 
 
 
