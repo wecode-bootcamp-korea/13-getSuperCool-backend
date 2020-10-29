@@ -5,12 +5,14 @@ from django.http  import HttpResponse, JsonResponse
 
 from products.models import ProductColor, Product, Color, Image
 from orders.models   import Order, OrderItem, OrderStatus
+from users.authorization import token_check
 
 class CartView(View):
+    @token_check
     def post(self, request):
         data = json.loads(request.body)
         
-        user_id    = data['user_id']
+        user_id    = request.user.id
         product_id = data['product_id'] 
         color_id   = data['color_id'] if data['color_id'] != '' else None 
         quantity   = data['quantity']
