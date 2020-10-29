@@ -29,7 +29,7 @@ class Inquiry(models.Model):
     name    = models.CharField(max_length=45)
     order   = models.ForeignKey('orders.Order' , on_delete=models.CASCADE,null=True) 
     country = models.CharField(max_length=45,null=True)
-    subject = models.OneToOneField('Subject', on_delete=models.CASCADE)
+    subject = models.ForeignKey('Subject', on_delete=models.CASCADE)
     message = models.CharField(max_length=2000)
 
     class Meta:
