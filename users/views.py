@@ -18,14 +18,13 @@ from  .authorization     import token_check
 class SignUpView(View):
     def post(self , request):
         try:
-            data = json.loads(request.body)
-
+            data       = json.loads(request.body)
             first_name = data["first_name"]
             last_name  = data["last_name"]
             birth_date = data['birth_date']
             email      = data["email"]
             password   = data["password"]
-            
+
             pattern=r'[A-Z0-9._%+-]+@[A-Z0-9,-]+\.[A-Z]{2,4}'
             regex  = re.compile(pattern,flags=re.IGNORECASE)
             
@@ -55,12 +54,10 @@ class SignUpView(View):
 
 class LoginView(View):
     def post(self,request):
-        data = json.loads(request.body)
-        
+        data       = json.loads(request.body)
         email      = data["email"]
         password   = data["password"]
-        
-        users = User.objects.filter(email=email)
+        users      = User.objects.filter(email=email)
 
         if users :
            
@@ -69,17 +66,13 @@ class LoginView(View):
             if bcrypt.checkpw(password.encode('utf-8'), get_pw) :
                 access_token    = jwt.encode({'user_id' : users[0].id}, my_settings.SECRET['secret'], algorithm = my_settings.ALGORITHM['algorithm']).decode('utf-8')
                 
-                return JsonResponse ({"message":"SUCCESS",'AUTHORIZATION':access_token },status=201)
-                    
-            else :
-                return JsonResponse({"message":"INVALID EMAIL OR PASSWORD"},status=400)
-        else :
-            return JsonResponse({"message":"INVALID EMAIL OR PASSWORD"},status=400)
+                return JsonResponse ({"message":"SUCCESS",'AUTHORIZATION':access_token },status=200)
+
+        return JsonResponse({"message":"INVALID EMAIL OR PASSWORD"},status=400)
             
 class InquiriesView(View):
     def post(self,request) :
-        data  = json.loads(request.body)
-
+        data    = json.loads(request.body)
         email   = data["email"]
         name    = data["name"]
         order   = data["order"]
@@ -90,22 +83,20 @@ class InquiriesView(View):
         subjects=Subject.objects.get(id=subject).id
         
         Inquiry.objects.create(
-            email=email,
-            name=name,
-            country=country,
-            message=message,
-            order_id=order,
-            subject_id=subjects,
+            email       =email,
+            name        =name,
+            country     =country,
+            message     =message,
+            order_id    =order,
+            subject_id  =subjects,
             )
         return JsonResponse({"message":"SUCCESS"},status=201)
 
 class ForgotPasswordView(View):
     def post(self,request) :
-        data  = json.loads(request.body)
-        
-        email = data["email"]
-        users = User.objects.filter(email=email)
-
+        data          = json.loads(request.body)
+        email         = data["email"]
+        users         = User.objects.filter(email=email)
         STRING_LENGTH = 10 
         string_pool   = string.ascii_lowercase 
 
@@ -114,23 +105,18 @@ class ForgotPasswordView(View):
             for i in range(STRING_LENGTH) :
                 new_pw += random.choice(string_pool)
 
-            new_pw_decode = bcrypt.hashpw(result.encode('utf-8'),bcrypt.gensalt()).decode('utf-8')
+            new_pw_decode = bcrypt.hashpw(new_pw.encode('utf-8'),bcrypt.gensalt()).decode('utf-8')
             User.objects.filter(email=email).update(password=new_pw_decode)
-            return JsonResponse({"message":"SUCCESS",'new_pw':new_pw},status=201)
+            return JsonResponse({"message":"SUCCESS",'new_pw':new_pw},status=200)
       
-        else : 
-            return JsonResponse({"message":"EMAIL_NOT_EXIST"},status=400)
+        return JsonResponse({"message":"EMAIL_NOT_EXIST"},status=400)
 
 class DiscountView(View):
     def post(self,request):
-
-        data=json.loads(request.body)
-
-        email=data["email"]
-
-        pattern =r'[A-Z0-9._%+-]+@[A-Z0-9,-]+\.[A-Z]{2,4}'
-        regex   =re.compile(pattern,flags=re.IGNORECASE)   
-             
+        data      = json.loads(request.body)
+        email     = data["email"]
+        pattern   = r'[A-Z0-9._%+-]+@[A-Z0-9,-]+\.[A-Z]{2,4}'
+        regex     = re.compile(pattern,flags=re.IGNORECASE)   
         get_email = Subscription.objects.filter(email=email)
 
         if len(regex.findall(email)) == 0:
@@ -138,36 +124,25 @@ class DiscountView(View):
         
         elif len(get_email) ==  0 :
             Subscription.objects.create(email=email)
-            return JsonResponse({"discount_code" : "SUPERCOOL20"},status=200)
-        else :
-            return JsonResponse({"message":"EMAIL_DUPLICATE"},status=400)
+            return JsonResponse({"discount_code" : "SUPERCOOL20"},status=201)
+    
+        return JsonResponse({"message":"EMAIL_DUPLICATE"},status=400)
 
 class LikeView(View):
     @token_check
-    def post(self , request,access_token_id):
-        try:    
-            data = json.loads(request.body)
-
-            product_id = data["product_id"]
-
-            get_user_id    = User.objects.filter(id=access_token_id)[0].id
-            get_product_id = Product.objects.filter(id=product_id)[0].id
+    def post(self , request):
+        try:
+            data            = json.loads(request.body)
+            product_id      = data["product_id"]
+            user_id         = request.user.id   
+            get_user_id     = User.objects.get(id=user_id).id
+            get_product_id  = Product.objects.get(id=product_id).id
             
             if get_user_id and get_product_id :
                 Like.objects.create(user_id = get_user_id , product_id=get_product_id)
-                return JsonResponse({"message":access_token_id},status=201)
+                return JsonResponse({"message":"SUCCESS"},status=201)
             
-            else : 
-                return JsonResponse({"message":"user_id or product_id INVALID"},status=401)
+            return JsonResponse({"message":"user_id or product_id INVALID"},status=400)
         
-        except IndexError:
-            return JsonResponse({"message":"user_id or product_id INVALID"},status=401)
-            
-        
-       
-        
-
-
-
-
-        
+        except Product.DoesNotExist:
+            return JsonResponse({"message":"user_id or product_id INVALID"},status=400)
